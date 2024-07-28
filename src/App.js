@@ -8,12 +8,12 @@ import PreviewArea from './components/PreviewArea';
 function App() {
   const [droppedActions, setDroppedActions] = useState([]);
   const [spritePosition, setSpritePosition] = useState({ x: 0, y: 0, direction: 0 });
-  const [displayHello, setDisplayHello] = useState(false);
+  const [displayMessage, setDisplayMessage] = useState('');
 
   const handleMove = () => {   
     setSpritePosition((prevPosition) => ({
     ...prevPosition,
-    x: prevPosition.x + 1,
+    x: prevPosition.x + 10,
     y: prevPosition.y,
     }));
   };
@@ -25,38 +25,46 @@ function App() {
     }));
   };
 
-  const sayHello = () => {
-    setDisplayHello(true);
-  };
-
-  const sayHelloFor2Seconds = () => {
-    setDisplayHello(true);
-    const timerId = setTimeout(() => {
-      setDisplayHello(false);
-    }, 2000);
-    return () => clearTimeout(timerId);
+  const handleDisplayMessage = (message, duration = 0) => {
+    setDisplayMessage(message);
+    if (duration > 0) {
+      setTimeout(() => {
+        setDisplayMessage('');
+      }, duration);
+    }
   };
 
   const handleRun = (droppedActions) => {
-    droppedActions.forEach(action => {
-      console.log(action.content)
-      if(action.content === 'Move 1 step') {
-        handleMove();
-        console.log('Moved 1 step')
-      } else if (action.content === 'Turn 15 degrees left') {
-        handleTurn(-15);
-        console.log('turned 15 degrees left')
-      } else if (action.content === 'Turn 15 degrees right') {
-        handleTurn(15);
-        console.log('turned 15 degrees right')
-      } else if (action.content === 'Say Hello') {
-        sayHello();
-      } else if (action.content === 'Say Hello for 2 sec') {
-        sayHelloFor2Seconds();
-      }
+    droppedActions.forEach((action, index) => {
+      setTimeout(() => {
+        switch (action.content) {
+          case 'Move 10 steps':
+            handleMove();
+            break;
+          case 'Turn 15 degrees left':
+            handleTurn(-15);
+            break;
+          case 'Turn 15 degrees right':
+            handleTurn(15);
+            break;
+          case 'Say Hello':
+            handleDisplayMessage('Hello!');
+            break;
+          case 'Say Hello for 2 sec':
+            handleDisplayMessage('Hello!', 2000);
+            break;
+          case 'Say Hmm':
+            handleDisplayMessage('Hmm');
+            break;
+          case 'Say Hmm for 2 sec':
+            handleDisplayMessage('Hmm', 2000);
+            break;
+          default:
+            console.log(`Unknown action: ${action.content}`);
+        }
+      }, index * 1000);
     });
   };
-  
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -64,11 +72,11 @@ function App() {
         <div className="bg-blue-100 pt-6 font-sans">
           <div className="h-screen overflow-hidden flex flex-row  ">
             <div className="flex-1 h-screen overflow-hidden flex flex-row bg-white border-t border-r border-gray-200 rounded-tr-xl mr-2">
-              <Sidebar onMoveClick={handleMove} onTurnLeft={() => handleTurn(-15)} onTurnRight={() => handleTurn(15)} sayHello={sayHello} displayHello={displayHello} sayHelloFor2Seconds={sayHelloFor2Seconds} />
+              <Sidebar onMoveClick={handleMove} onTurnLeft={() => handleTurn(-15)} onTurnRight={() => handleTurn(15)} handleDisplayMessage={handleDisplayMessage} />
               <MidArea droppedActions={droppedActions} setDroppedActions={setDroppedActions} handleRun={handleRun} />
             </div>
             <div className="w-1/3 h-screen overflow-hidden flex flex-row bg-white border-t border-l border-gray-200 rounded-tl-xl ml-2">
-              <PreviewArea position={spritePosition} direction={spritePosition.direction} displayHello={displayHello} />
+              <PreviewArea position={spritePosition} direction={spritePosition.direction} displayMessage={displayMessage} />
             </div>
           </div>
         </div>

@@ -12,6 +12,10 @@ const MidArea = ({handleRun}) => {
     handleRun(droppedActions);
   };
 
+  const onClearClick = () => {
+    setDroppedActions([]);
+  };
+
   const [{ isOver }, drop] = useDrop(() => ({
     accept: 'block',
     drop: handleDrop,
@@ -35,9 +39,14 @@ const MidArea = ({handleRun}) => {
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <button style={{background: 'none', border: '1px solid blue', color: 'blue', padding: '10px 20px', borderRadius: '5px', cursor: 'pointer'}} 
+        <button style={{background: 'none', border: '1px solid blue', color: 'blue', padding: '10px 20px', borderRadius: '5px', cursor: 'pointer', marginRight: '10px'}} 
           onClick={onRunClick}>
             Run
+        </button>
+
+        <button style={{background: 'none', border: '1px solid blue', color: 'blue', padding: '10px 20px', borderRadius: '5px', cursor: 'pointer'}} 
+          onClick={onClearClick}>
+            Clear
         </button>
       </div>
       
