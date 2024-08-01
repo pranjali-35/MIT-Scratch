@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDrop } from 'react-dnd';
 
-const MidArea = ({handleRun}) => {
-  const [droppedActions, setDroppedActions] = useState([]);
-
+const MidArea = ({ droppedActions, setDroppedActions, handleRun, resetSprite }) => {
   const handleDrop = (item) => {
     setDroppedActions((droppedActions) => [...droppedActions, item]);
   };
@@ -14,15 +12,13 @@ const MidArea = ({handleRun}) => {
 
   const onClearClick = () => {
     setDroppedActions([]);
+    resetSprite();  // Reset sprite position and clear any messages
   };
 
   const [{ isOver }, drop] = useDrop(() => ({
     accept: 'block',
     drop: handleDrop,
   }));
-
-  useEffect(() => {
-  }, [droppedActions]);
 
   return (
     <div>
